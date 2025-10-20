@@ -7,6 +7,8 @@ function Admin() {
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [announcement, setAnnouncement] = useState('');
+  const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [posts, setPosts] = useState([]);
   const [textColor, setTextColor] = useState('#ffffff');
   const [isBold, setIsBold] = useState(false);
@@ -35,6 +37,8 @@ function Admin() {
     const newPost = {
       id: Date.now(),
       title: announcement,
+      description: description,
+      imageUrl: imageUrl,
       author: username,
       date: new Date().toLocaleDateString(),
       pinned: false,
@@ -51,6 +55,8 @@ function Admin() {
     setPosts(updatedPosts);
     localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
     setAnnouncement('');
+    setDescription('');
+    setImageUrl('');
     setTextColor('#ffffff');
     setIsBold(false);
     setIsUnderline(false);
@@ -114,6 +120,18 @@ function Admin() {
           placeholder="Announcement title..."
           value={announcement}
           onChange={(e) => setAnnouncement(e.target.value)}
+        />
+        <textarea
+          placeholder="Description (optional)..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          rows="4"
+        />
+        <input
+          type="text"
+          placeholder="Image URL (optional)..."
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
         />
         
         <div className="text-formatting">

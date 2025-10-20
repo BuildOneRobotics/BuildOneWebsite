@@ -66,6 +66,26 @@
   margin-bottom: 15px;
 }
 
+.post-description {
+  color: #b0b0b0;
+  line-height: 1.6;
+  margin: 15px 0;
+}
+
+.post-image {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+  margin: 15px 0;
+  border: 2px solid #bb86fc;
+  transition: all 0.3s ease;
+}
+
+.post-image:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(187, 134, 252, 0.4);
+}
+
 .comments-section {
   margin-top: 20px;
   padding-top: 20px;
