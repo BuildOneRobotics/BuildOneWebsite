@@ -19,10 +19,6 @@ function Home() {
           <h3>⚡ Automation</h3>
           <p>Streamline your operations with intelligent automation solutions</p>
         </div>
-        <div className="card">
-          <h3>🔧 Custom Solutions</h3>
-          <p>Tailored robotic systems to meet your specific business needs</p>
-        </div>
       </div>
 
 
