@@ -46,41 +46,91 @@
   margin-bottom: 50px;
 }
 
-.admin-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-}
-
-.admin-card {
+.announcement-section {
+  max-width: 800px;
+  margin: 0 auto 50px;
+  padding: 30px;
   background: rgba(30, 30, 30, 0.6);
-  padding: 35px;
   border-radius: 24px;
   border: 2px solid #bb86fc;
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.announcement-section h2 {
+  color: #bb86fc;
+  margin-bottom: 20px;
+}
+
+.announcement-section input {
+  margin-bottom: 15px;
+}
+
+.moderation-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.moderation-section h2 {
+  color: #bb86fc;
+  margin-bottom: 30px;
   text-align: center;
 }
 
-.admin-card:hover {
-  transform: translateY(-10px) scale(1.05);
-  box-shadow: 0 15px 40px rgba(187, 134, 252, 0.4);
-  background: rgba(187, 134, 252, 0.1);
+.no-posts {
+  text-align: center;
+  color: #888;
+  padding: 40px;
 }
 
-.admin-card h3 {
-  color: #bb86fc;
+.mod-post {
+  background: rgba(30, 30, 30, 0.6);
+  padding: 25px;
+  border-radius: 20px;
+  border: 2px solid #bb86fc;
   margin-bottom: 20px;
-  font-size: 1.5rem;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-.stat {
+.mod-post:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(187, 134, 252, 0.3);
+}
+
+.mod-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.mod-post-header h3 {
+  margin: 0;
   color: #e0e0e0;
-  font-size: 1.1rem;
-  margin: 10px 0;
 }
 
-.admin-card button {
-  margin-top: 20px;
-  width: 100%;
+.pinned-badge, .announcement-badge {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(187, 134, 252, 0.3);
+}
+
+.mod-author {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.mod-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.mod-actions button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
 }

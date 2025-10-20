@@ -17,6 +17,12 @@
   margin-bottom: 40px;
 }
 
+.no-posts {
+  text-align: center;
+  color: #888;
+  padding: 40px;
+}
+
 .post-card {
   background: rgba(30, 30, 30, 0.6);
   padding: 30px;
@@ -25,6 +31,7 @@
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   cursor: pointer;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  margin-bottom: 20px;
 }
 
 .post-card:hover {
@@ -33,23 +40,72 @@
   background: rgba(187, 134, 252, 0.1);
 }
 
-.post-card h3 {
-  color: #bb86fc;
-  margin-bottom: 15px;
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
-.post-card p {
-  color: #b0b0b0;
-  margin-bottom: 15px;
-  line-height: 1.6;
+.post-card h3 {
+  color: #bb86fc;
+  margin: 0;
+}
+
+.pin-badge, .announcement-badge {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(187, 134, 252, 0.3);
 }
 
 .author {
   color: #888;
   font-size: 0.9rem;
+  display: block;
+  margin-bottom: 15px;
 }
 
-.new-post-btn {
+.comments-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #444;
+}
+
+.comments-section h4 {
+  color: #bb86fc;
+  margin-bottom: 15px;
+}
+
+.comment {
+  background: rgba(20, 20, 20, 0.5);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.comment strong {
+  color: #bb86fc;
+}
+
+.comment-date {
   display: block;
-  margin: 0 auto;
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 5px;
+}
+
+.add-comment {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.add-comment input {
+  margin: 0;
+}
+
+.add-comment button {
+  align-self: flex-start;
 }
