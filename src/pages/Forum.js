@@ -43,7 +43,7 @@ function Forum() {
           posts.map(post => (
             <div key={post.id} className="post-card" onClick={() => setSelectedPost(selectedPost === post.id ? null : post.id)}>
               <div className="post-header">
-                <h3>{post.title}</h3>
+                <h3 style={post.style || {}}>{post.title}</h3>
                 {post.pinned && <span className="pin-badge">📌</span>}
                 {post.isAnnouncement && <span className="announcement-badge">📢</span>}
               </div>
