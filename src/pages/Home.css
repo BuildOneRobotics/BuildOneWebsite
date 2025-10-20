@@ -14,29 +14,12 @@
   width: 100%;
   height: 100%;
   background-image: 
-    radial-gradient(circle at 20% 30%, rgba(30, 60, 114, 0.3) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(30, 60, 114, 0.3) 0%, transparent 50%);
-  background-size: 100% 100%;
+    url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%231e3c72' stroke-width='3' fill='none' opacity='0.15'%3E%3Crect x='20' y='30' width='40' height='50' rx='5' stroke-linecap='round'/%3E%3Ccircle cx='40' cy='50' r='8'/%3E%3Cline x1='40' y1='80' x2='40' y2='100'/%3E%3Cline x1='30' y1='100' x2='50' y2='100'/%3E%3Cline x1='25' y1='40' x2='15' y2='40'/%3E%3Cline x1='55' y1='40' x2='65' y2='40'/%3E%3C/g%3E%3Cg stroke='%231e3c72' stroke-width='3' fill='none' opacity='0.12'%3E%3Ccircle cx='140' cy='60' r='20'/%3E%3Cpath d='M 130 60 L 120 50 M 150 60 L 160 50 M 130 70 L 120 80 M 150 70 L 160 80'/%3E%3Cline x1='135' y1='55' x2='135' y2='65'/%3E%3Cline x1='145' y1='55' x2='145' y2='65'/%3E%3C/g%3E%3Cg stroke='%231e3c72' stroke-width='2.5' fill='none' opacity='0.1'%3E%3Crect x='100' y='130' width='60' height='40' rx='3'/%3E%3Cline x1='110' y1='140' x2='150' y2='140'/%3E%3Cline x1='110' y1='150' x2='150' y2='150'/%3E%3Cline x1='110' y1='160' x2='150' y2='160'/%3E%3Ccircle cx='115' cy='140' r='2' fill='%231e3c72'/%3E%3Ccircle cx='145' cy='150' r='2' fill='%231e3c72'/%3E%3C/g%3E%3Cg stroke='%231e3c72' stroke-width='3' fill='none' opacity='0.13'%3E%3Ccircle cx='50' cy='150' r='15'/%3E%3Cpath d='M 42 150 L 58 150 M 50 142 L 50 158'/%3E%3Ccircle cx='50' cy='150' r='8'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 400px 400px;
+  background-repeat: repeat;
   z-index: -1;
   pointer-events: none;
-}
-
-.home::after {
-  content: '🤖 ⚙️ 🔧 🔩 ⚡ 🦾 🛠️ 📡 🔌 💡 🤖 ⚙️ 🔧 🔩 ⚡ 🦾 🛠️ 📡 🔌 💡';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  font-size: 3rem;
-  opacity: 0.05;
-  z-index: -1;
-  pointer-events: none;
-  word-wrap: break-word;
-  line-height: 4rem;
-  padding: 20px;
-  color: #1e3c72;
-  text-shadow: 2px 2px 4px rgba(30, 60, 114, 0.5);
+  filter: blur(0.5px);
 }
 
 .hero {
