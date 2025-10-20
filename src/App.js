@@ -4,6 +4,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import About from './pages/About';
+import Forum from './pages/Forum';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/forum" element={<Forum />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
         <Footer />
       </div>
