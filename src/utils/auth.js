@@ -1,25 +1,25 @@
 const h = (s) => {
-  let x = 0;
+  let hash = 0;
   for (let i = 0; i < s.length; i++) {
-    x = ((x << 5) - x) + s.charCodeAt(i);
-    x = x & x;
+    const char = s.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash | 0;
   }
-  return x;
+  return hash;
 };
 
-const c = [
-  [-1006319273, -1506887480, 'super'],
-  [-1545738973, -1397293008, 'mod']
+const d = [
+  [h('bensteels'), h('24122012'), 's'],
+  [h('ethanpatmore'), h('1012'), 'm']
 ];
 
 export const validateAdmin = (u, p) => {
   const uh = h(u);
   const ph = h(p);
-  console.log('Username hash:', uh, 'Password hash:', ph);
-  const match = c.find(([a, b]) => a === uh && b === ph);
-  return match ? { valid: true, role: match[2], username: u } : { valid: false };
+  const match = d.find(([a, b]) => a === uh && b === ph);
+  return match ? { valid: true, role: match[2] === 's' ? 'super' : 'mod', username: u } : { valid: false };
 };
 
 export const isSuperAdmin = (username) => {
-  return h(username) === -1006319273;
+  return h(username) === h('bensteels');
 };
