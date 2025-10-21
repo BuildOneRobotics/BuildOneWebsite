@@ -124,6 +124,43 @@
   text-align: center;
 }
 
+.rich-editor {
+  margin-bottom: 15px;
+}
+
+.rich-editor label {
+  display: block;
+  color: #bb86fc;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.editable-field {
+  background: rgba(30, 30, 30, 0.8);
+  color: #ffffff;
+  border: 2px solid #bb86fc;
+  border-radius: 20px;
+  padding: 14px 20px;
+  min-height: 50px;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  outline: none;
+}
+
+.editable-field.multi-line {
+  min-height: 100px;
+}
+
+.editable-field:focus {
+  border-color: #7c4dff;
+  box-shadow: 0 0 30px rgba(187, 134, 252, 0.5);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.editable-field .placeholder {
+  color: #888;
+  font-style: italic;
+}
+
 .announcement-section input[type="text"],
 .announcement-section textarea {
   margin-bottom: 15px;

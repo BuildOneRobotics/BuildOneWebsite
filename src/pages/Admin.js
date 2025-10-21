@@ -71,7 +71,8 @@ function Admin() {
   };
 
   const handlePostAnnouncement = () => {
-    if (!announcement.trim()) return;
+    const cleanTitle = announcement.replace(/<span class="placeholder">.*?<\/span>/g, '').trim();
+    if (!cleanTitle) return;
     const newPost = {
       id: Date.now(),
       title: announcement,
@@ -81,22 +82,7 @@ function Admin() {
       date: new Date().toLocaleDateString(),
       pinned: false,
       isAnnouncement: true,
-      titleStyle: {
-        color: titleStyle.color,
-        fontWeight: titleStyle.bold ? 'bold' : 'normal',
-        textDecoration: titleStyle.underline ? 'underline' : 'none',
-        fontStyle: titleStyle.italic ? 'italic' : 'normal',
-        fontSize: titleStyle.fontSize + 'px',
-        fontFamily: titleStyle.fontFamily
-      },
-      descStyle: {
-        color: descStyle.color,
-        fontWeight: descStyle.bold ? 'bold' : 'normal',
-        textDecoration: descStyle.underline ? 'underline' : 'none',
-        fontStyle: descStyle.italic ? 'italic' : 'normal',
-        fontSize: descStyle.fontSize + 'px',
-        fontFamily: descStyle.fontFamily
-      }
+      isHTML: true
     };
     const updatedPosts = [newPost, ...posts];
     setPosts(updatedPosts);
@@ -104,8 +90,6 @@ function Admin() {
     setAnnouncement('');
     setDescription('');
     setImageUrl('');
-    setTitleStyle({ color: '#ffffff', fontSize: '16', fontFamily: 'inherit', bold: false, italic: false, underline: false });
-    setDescStyle({ color: '#ffffff', fontSize: '16', fontFamily: 'inherit', bold: false, italic: false, underline: false });
   };
 
   const handlePin = (id) => {
@@ -192,51 +176,44 @@ function Admin() {
       {userRole === 'super' && <div className="announcement-section">
         <h2>Post Announcement</h2>
         
-        <div className="edit-mode-selector">
-          <button type="button" className={editMode === 'title' ? 'active' : ''} onClick={() => setEditMode('title')}>Format Title</button>
-          <button type="button" className={editMode === 'description' ? 'active' : ''} onClick={() => setEditMode('description')}>Format Description</button>
+        <div className="rich-editor">
+          <label>Title:</label>
+          <div 
+            contentEditable 
+            className="editable-field"
+            dangerouslySetInnerHTML={{__html: announcement || '<span class="placeholder">Announcement title...</span>'}}
+            onInput={(e) => setAnnouncement(e.currentTarget.innerHTML)}
+            onFocus={(e) => { if (e.currentTarget.textContent === 'Announcement title...') e.currentTarget.innerHTML = ''; }}
+          />
         </div>
         
-        <input type="text" placeholder="Announcement title..." value={announcement} onChange={(e) => setAnnouncement(e.target.value)} />
-        <textarea placeholder="Description (optional)..." value={description} onChange={(e) => setDescription(e.target.value)} rows="4" />
+        <div className="rich-editor">
+          <label>Description:</label>
+          <div 
+            contentEditable 
+            className="editable-field multi-line"
+            dangerouslySetInnerHTML={{__html: description || '<span class="placeholder">Description (optional)...</span>'}}
+            onInput={(e) => setDescription(e.currentTarget.innerHTML)}
+            onFocus={(e) => { if (e.currentTarget.textContent === 'Description (optional)...') e.currentTarget.innerHTML = ''; }}
+          />
+        </div>
         <input type="text" placeholder="Image URL (optional)..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
         
         <div className="text-formatting">
-          <p className="format-hint">Formatting {editMode === 'title' ? 'Title' : 'Description'}</p>
-          <div className="format-group">
-            <label>Color:</label>
-            <input type="color" value={currentStyle.color} onChange={(e) => setCurrentStyle({...currentStyle, color: e.target.value})} />
-          </div>
-          <div className="format-group">
-            <label>Size:</label>
-            <input type="number" value={currentStyle.fontSize} onChange={(e) => setCurrentStyle({...currentStyle, fontSize: e.target.value})} min="12" max="32" />
-          </div>
-          <div className="format-group">
-            <label>Font:</label>
-            <select value={currentStyle.fontFamily} onChange={(e) => setCurrentStyle({...currentStyle, fontFamily: e.target.value})} className="font-select">
-              <option value="inherit">Default</option>
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="'Courier New', monospace">Courier</option>
-              <option value="Georgia, serif">Georgia</option>
-              <option value="'Comic Sans MS', cursive">Comic Sans</option>
-              <option value="'Times New Roman', serif">Times New Roman</option>
-              <option value="Verdana, sans-serif">Verdana</option>
-            </select>
-          </div>
+          <p className="format-hint">Select text and apply formatting:</p>
           <div className="format-buttons">
-            <button type="button" onClick={() => setCurrentStyle({...currentStyle, bold: !currentStyle.bold})} className={currentStyle.bold ? 'active' : ''} style={{fontWeight: 'bold'}}>B</button>
-            <button type="button" onClick={() => setCurrentStyle({...currentStyle, italic: !currentStyle.italic})} className={currentStyle.italic ? 'active' : ''} style={{fontStyle: 'italic'}}>I</button>
-            <button type="button" onClick={() => setCurrentStyle({...currentStyle, underline: !currentStyle.underline})} className={currentStyle.underline ? 'active' : ''} style={{textDecoration: 'underline'}}>U</button>
+            <button type="button" onClick={() => document.execCommand('bold')} style={{fontWeight: 'bold'}}>B</button>
+            <button type="button" onClick={() => document.execCommand('italic')} style={{fontStyle: 'italic'}}>I</button>
+            <button type="button" onClick={() => document.execCommand('underline')} style={{textDecoration: 'underline'}}>U</button>
+            <button type="button" onClick={() => { const color = prompt('Enter color (e.g., #ff0000):'); if (color) document.execCommand('foreColor', false, color); }}>🎨 Color</button>
+            <button type="button" onClick={() => { const size = prompt('Enter size (1-7):'); if (size) document.execCommand('fontSize', false, size); }}>📏 Size</button>
           </div>
         </div>
         
         <div className="preview">
-          <div style={{color: titleStyle.color, fontWeight: titleStyle.bold ? 'bold' : 'normal', textDecoration: titleStyle.underline ? 'underline' : 'none', fontStyle: titleStyle.italic ? 'italic' : 'normal', fontSize: titleStyle.fontSize + 'px', fontFamily: titleStyle.fontFamily}}>
-            <strong>Title:</strong> {announcement || 'Your announcement here...'}
-          </div>
-          <div style={{color: descStyle.color, fontWeight: descStyle.bold ? 'bold' : 'normal', textDecoration: descStyle.underline ? 'underline' : 'none', fontStyle: descStyle.italic ? 'italic' : 'normal', fontSize: descStyle.fontSize + 'px', fontFamily: descStyle.fontFamily, marginTop: '10px'}}>
-            <strong>Description:</strong> {description || 'Your description here...'}
-          </div>
+          <strong>Preview:</strong>
+          <div dangerouslySetInnerHTML={{__html: announcement || 'Your announcement here...'}} />
+          <div dangerouslySetInnerHTML={{__html: description || 'Your description here...'}} style={{marginTop: '10px'}} />
         </div>
         
         <button onClick={handlePostAnnouncement}>Post Announcement</button>
