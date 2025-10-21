@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://buildonerobotics.github.io/BuildOneWebsite/sitemap.xml
