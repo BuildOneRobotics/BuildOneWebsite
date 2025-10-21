@@ -13,6 +13,7 @@ function Admin() {
   const [userRole, setUserRole] = useState('');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   useEffect(() => {
     setUsername('');
@@ -138,6 +139,21 @@ function Admin() {
     localStorage.removeItem('adminUser');
   };
 
+  const handleExportData = () => {
+    const dataStr = JSON.stringify(posts, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `forum-data-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleViewAnalytics = () => {
+    setShowAnalytics(!showAnalytics);
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="admin">
@@ -216,10 +232,33 @@ function Admin() {
         <div className="super-admin-section">
           <h2>Super Admin Controls</h2>
           <div className="super-controls">
-            <button onClick={() => alert('Export feature coming soon!')}>📥 Export All Data</button>
-            <button onClick={() => alert('Analytics coming soon!')}>📊 View Analytics</button>
+            <button onClick={handleExportData}>📥 Export All Data</button>
+            <button onClick={handleViewAnalytics}>📊 View Analytics</button>
             <button onClick={handleClearAll} className="danger-btn">🗑️ Clear All Posts</button>
           </div>
+          {showAnalytics && (
+            <div className="analytics-panel">
+              <h3>Forum Analytics</h3>
+              <div className="stats-grid">
+                <div className="stat-card">
+                  <span className="stat-number">{posts.length}</span>
+                  <span className="stat-label">Total Posts</span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-number">{posts.filter(p => p.isAnnouncement).length}</span>
+                  <span className="stat-label">Announcements</span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-number">{posts.reduce((acc, p) => acc + (p.comments?.length || 0), 0)}</span>
+                  <span className="stat-label">Total Comments</span>
+                </div>
+                <div className="stat-card">
+                  <span className="stat-number">{posts.filter(p => p.pinned).length}</span>
+                  <span className="stat-label">Pinned Posts</span>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
