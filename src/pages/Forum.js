@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './Forum.css';
 
+const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate', 'fuck', 'shit', 'ass', 'bitch', 'bastard'];
+
 function Forum() {
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [comment, setComment] = useState('');
   const [guestName, setGuestName] = useState('');
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const savedPosts = localStorage.getItem('forumPosts');
@@ -15,14 +18,30 @@ function Forum() {
     }
   }, []);
 
+  const filterSwearWords = (text) => {
+    let filtered = text;
+    SWEAR_WORDS.forEach(word => {
+      const regex = new RegExp(word, 'gi');
+      filtered = filtered.replace(regex, '***');
+    });
+    return filtered;
+  };
+
   const handleAddComment = (postId) => {
-    if (!comment.trim() || !guestName.trim()) return;
+    if (!comment.trim() || !guestName.trim()) {
+      setError('Please enter your name and comment');
+      return;
+    }
+    
+    const filteredComment = filterSwearWords(comment);
+    const filteredName = filterSwearWords(guestName);
+    
     const updatedPosts = posts.map(p => {
       if (p.id === postId) {
         const comments = p.comments || [];
         return {
           ...p,
-          comments: [...comments, { author: guestName, text: comment, date: new Date().toLocaleString() }]
+          comments: [...comments, { author: filteredName, text: filteredComment, date: new Date().toLocaleString() }]
         };
       }
       return p;
@@ -30,6 +49,7 @@ function Forum() {
     setPosts(updatedPosts);
     localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
     setComment('');
+    setError('');
   };
 
   return (
@@ -61,6 +81,7 @@ function Forum() {
                     </div>
                   ))}
                   <div className="add-comment">
+                    {error && <p className="comment-error">{error}</p>}
                     <input
                       type="text"
                       placeholder="Your name"

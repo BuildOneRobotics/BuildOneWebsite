@@ -237,3 +237,37 @@
 .delete-btn {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
 }
+
+.mod-comments {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #444;
+}
+
+.mod-comments h4 {
+  color: #bb86fc;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.mod-comment {
+  background: rgba(20, 20, 20, 0.5);
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.mod-comment strong {
+  color: #bb86fc;
+}
+
+.delete-comment-btn {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+  padding: 6px 12px !important;
+  font-size: 0.8rem !important;
+  flex-shrink: 0;
+}

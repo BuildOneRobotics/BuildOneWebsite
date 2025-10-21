@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
 
+const ADMIN_CREDENTIALS = {
+  bensteels: '2412',
+  ethanpatmore: '1012'
+};
+
+const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate'];
+
 function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
@@ -23,7 +30,7 @@ function Admin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if ((username === 'bensteels' && pin === '2412') || (username === 'ethanpatmore' && pin === '1012')) {
+    if (ADMIN_CREDENTIALS[username] === pin) {
       setIsLoggedIn(true);
       setError('');
       localStorage.setItem('adminUser', username);
@@ -73,6 +80,20 @@ function Admin() {
   const handleDelete = (id) => {
     if (!window.confirm('Delete this post?')) return;
     const updatedPosts = posts.filter(p => p.id !== id);
+    setPosts(updatedPosts);
+    localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
+  };
+
+  const handleDeleteComment = (postId, commentIndex) => {
+    if (!window.confirm('Delete this comment?')) return;
+    const updatedPosts = posts.map(p => {
+      if (p.id === postId) {
+        const comments = [...(p.comments || [])];
+        comments.splice(commentIndex, 1);
+        return { ...p, comments };
+      }
+      return p;
+    });
     setPosts(updatedPosts);
     localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
   };
@@ -175,9 +196,20 @@ function Admin() {
                 {post.isAnnouncement && <span className="announcement-badge">📢 Announcement</span>}
               </div>
               <p className="mod-author">By {post.author} • {post.date}</p>
+              {post.comments && post.comments.length > 0 && (
+                <div className="mod-comments">
+                  <h4>Comments ({post.comments.length})</h4>
+                  {post.comments.map((c, i) => (
+                    <div key={i} className="mod-comment">
+                      <strong>{c.author}</strong>: {c.text}
+                      <button onClick={() => handleDeleteComment(post.id, i)} className="delete-comment-btn">Delete</button>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="mod-actions">
                 <button onClick={() => handlePin(post.id)}>{post.pinned ? 'Unpin' : 'Pin'}</button>
-                <button onClick={() => handleDelete(post.id)} className="delete-btn">Delete</button>
+                <button onClick={() => handleDelete(post.id)} className="delete-btn">Delete Post</button>
               </div>
             </div>
           ))
