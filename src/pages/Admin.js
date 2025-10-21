@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
 import { savePosts, loadPosts } from '../utils/storage';
-
-const ADMIN_CREDENTIALS = {
-  bensteels: '2412',
-  ethanpatmore: '1012'
-};
+import { validateAdmin } from '../utils/auth';
 
 const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate'];
+const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
 
 function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -25,12 +22,34 @@ function Admin() {
   const [fontSize, setFontSize] = useState('16');
 
   useEffect(() => {
-    loadPosts().then(setPosts);
+    loadPosts().then(data => {
+      const cleaned = cleanOldComments(data);
+      setPosts(cleaned);
+      if (cleaned.length !== data.length) {
+        savePosts(cleaned);
+      }
+    });
   }, []);
+
+  const cleanOldComments = (posts) => {
+    const now = Date.now();
+    return posts.map(post => {
+      if (post.isAnnouncement) return post;
+      
+      if (post.comments) {
+        const validComments = post.comments.filter(c => {
+          const commentDate = new Date(c.date).getTime();
+          return (now - commentDate) < THREE_MONTHS_MS;
+        });
+        return { ...post, comments: validComments };
+      }
+      return post;
+    });
+  };
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (ADMIN_CREDENTIALS[username] === pin) {
+    if (validateAdmin(username, pin)) {
       setIsLoggedIn(true);
       setError('');
       localStorage.setItem('adminUser', username);

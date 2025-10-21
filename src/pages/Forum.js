@@ -3,6 +3,7 @@ import './Forum.css';
 import { savePosts, loadPosts } from '../utils/storage';
 
 const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate', 'fuck', 'shit', 'ass', 'bitch', 'bastard'];
+const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
 
 function Forum() {
   const [posts, setPosts] = useState([]);
@@ -13,9 +14,26 @@ function Forum() {
 
   useEffect(() => {
     loadPosts().then(data => {
-      setPosts(data.sort((a, b) => b.pinned - a.pinned));
+      const cleaned = cleanOldComments(data);
+      setPosts(cleaned.sort((a, b) => b.pinned - a.pinned));
     });
   }, []);
+
+  const cleanOldComments = (posts) => {
+    const now = Date.now();
+    return posts.map(post => {
+      if (post.isAnnouncement) return post;
+      
+      if (post.comments) {
+        const validComments = post.comments.filter(c => {
+          const commentDate = new Date(c.date).getTime();
+          return (now - commentDate) < THREE_MONTHS_MS;
+        });
+        return { ...post, comments: validComments };
+      }
+      return post;
+    });
+  };
 
   const filterSwearWords = (text) => {
     let filtered = text;
