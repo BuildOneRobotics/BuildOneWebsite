@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Forum.css';
+import { savePosts, loadPosts } from '../utils/storage';
 
 const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate', 'fuck', 'shit', 'ass', 'bitch', 'bastard'];
 
@@ -11,11 +12,9 @@ function Forum() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const savedPosts = localStorage.getItem('forumPosts');
-    if (savedPosts) {
-      const parsed = JSON.parse(savedPosts);
-      setPosts(parsed.sort((a, b) => b.pinned - a.pinned));
-    }
+    loadPosts().then(data => {
+      setPosts(data.sort((a, b) => b.pinned - a.pinned));
+    });
   }, []);
 
   const filterSwearWords = (text) => {
@@ -47,7 +46,7 @@ function Forum() {
       return p;
     });
     setPosts(updatedPosts);
-    localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
+    savePosts(updatedPosts);
     setComment('');
     setError('');
   };

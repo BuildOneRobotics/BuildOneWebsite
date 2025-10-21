@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
+import { savePosts, loadPosts } from '../utils/storage';
 
 const ADMIN_CREDENTIALS = {
   bensteels: '2412',
@@ -24,8 +25,7 @@ function Admin() {
   const [fontSize, setFontSize] = useState('16');
 
   useEffect(() => {
-    const savedPosts = localStorage.getItem('forumPosts');
-    if (savedPosts) setPosts(JSON.parse(savedPosts));
+    loadPosts().then(setPosts);
   }, []);
 
   const handleLogin = (e) => {
@@ -60,7 +60,7 @@ function Admin() {
     };
     const updatedPosts = [newPost, ...posts];
     setPosts(updatedPosts);
-    localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
+    savePosts(updatedPosts);
     setAnnouncement('');
     setDescription('');
     setImageUrl('');
@@ -74,14 +74,14 @@ function Admin() {
   const handlePin = (id) => {
     const updatedPosts = posts.map(p => p.id === id ? {...p, pinned: !p.pinned} : p);
     setPosts(updatedPosts);
-    localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
+    savePosts(updatedPosts);
   };
 
   const handleDelete = (id) => {
     if (!window.confirm('Delete this post?')) return;
     const updatedPosts = posts.filter(p => p.id !== id);
     setPosts(updatedPosts);
-    localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
+    savePosts(updatedPosts);
   };
 
   const handleDeleteComment = (postId, commentIndex) => {
@@ -95,13 +95,13 @@ function Admin() {
       return p;
     });
     setPosts(updatedPosts);
-    localStorage.setItem('forumPosts', JSON.stringify(updatedPosts));
+    savePosts(updatedPosts);
   };
 
   const handleClearAll = () => {
     if (!window.confirm('Clear all posts? This cannot be undone!')) return;
     setPosts([]);
-    localStorage.setItem('forumPosts', JSON.stringify([]));
+    savePosts([]);
   };
 
   const handleLogout = () => {
