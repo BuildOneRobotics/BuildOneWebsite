@@ -23,12 +23,12 @@ function Admin() {
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [posts, setPosts] = useState([]);
-  const [textColor, setTextColor] = useState('#ffffff');
-  const [isBold, setIsBold] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [fontSize, setFontSize] = useState('16');
-  const [fontFamily, setFontFamily] = useState('inherit');
+  const [editMode, setEditMode] = useState('title');
+  const [titleStyle, setTitleStyle] = useState({ color: '#ffffff', fontSize: '16', fontFamily: 'inherit', bold: false, italic: false, underline: false });
+  const [descStyle, setDescStyle] = useState({ color: '#ffffff', fontSize: '16', fontFamily: 'inherit', bold: false, italic: false, underline: false });
+  
+  const currentStyle = editMode === 'title' ? titleStyle : descStyle;
+  const setCurrentStyle = editMode === 'title' ? setTitleStyle : setDescStyle;
 
   useEffect(() => {
     loadPosts().then(data => {
@@ -77,17 +77,25 @@ function Admin() {
       title: announcement,
       description: description,
       imageUrl: imageUrl,
-      author: username,
+      author: currentUser,
       date: new Date().toLocaleDateString(),
       pinned: false,
       isAnnouncement: true,
-      style: {
-        color: textColor,
-        fontWeight: isBold ? 'bold' : 'normal',
-        textDecoration: isUnderline ? 'underline' : 'none',
-        fontStyle: isItalic ? 'italic' : 'normal',
-        fontSize: fontSize + 'px',
-        fontFamily: fontFamily
+      titleStyle: {
+        color: titleStyle.color,
+        fontWeight: titleStyle.bold ? 'bold' : 'normal',
+        textDecoration: titleStyle.underline ? 'underline' : 'none',
+        fontStyle: titleStyle.italic ? 'italic' : 'normal',
+        fontSize: titleStyle.fontSize + 'px',
+        fontFamily: titleStyle.fontFamily
+      },
+      descStyle: {
+        color: descStyle.color,
+        fontWeight: descStyle.bold ? 'bold' : 'normal',
+        textDecoration: descStyle.underline ? 'underline' : 'none',
+        fontStyle: descStyle.italic ? 'italic' : 'normal',
+        fontSize: descStyle.fontSize + 'px',
+        fontFamily: descStyle.fontFamily
       }
     };
     const updatedPosts = [newPost, ...posts];
@@ -96,12 +104,8 @@ function Admin() {
     setAnnouncement('');
     setDescription('');
     setImageUrl('');
-    setTextColor('#ffffff');
-    setIsBold(false);
-    setIsUnderline(false);
-    setIsItalic(false);
-    setFontSize('16');
-    setFontFamily('inherit');
+    setTitleStyle({ color: '#ffffff', fontSize: '16', fontFamily: 'inherit', bold: false, italic: false, underline: false });
+    setDescStyle({ color: '#ffffff', fontSize: '16', fontFamily: 'inherit', bold: false, italic: false, underline: false });
   };
 
   const handlePin = (id) => {
@@ -187,39 +191,29 @@ function Admin() {
 
       {userRole === 'super' && <div className="announcement-section">
         <h2>Post Announcement</h2>
-        <input
-          type="text"
-          placeholder="Announcement title..."
-          value={announcement}
-          onChange={(e) => setAnnouncement(e.target.value)}
-        />
-        <textarea
-          placeholder="Description (optional)..."
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          rows="4"
-        />
-        <input
-          type="text"
-          placeholder="Image URL (optional)..."
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-        />
+        
+        <div className="edit-mode-selector">
+          <button type="button" className={editMode === 'title' ? 'active' : ''} onClick={() => setEditMode('title')}>Format Title</button>
+          <button type="button" className={editMode === 'description' ? 'active' : ''} onClick={() => setEditMode('description')}>Format Description</button>
+        </div>
+        
+        <input type="text" placeholder="Announcement title..." value={announcement} onChange={(e) => setAnnouncement(e.target.value)} />
+        <textarea placeholder="Description (optional)..." value={description} onChange={(e) => setDescription(e.target.value)} rows="4" />
+        <input type="text" placeholder="Image URL (optional)..." value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
         
         <div className="text-formatting">
+          <p className="format-hint">Formatting {editMode === 'title' ? 'Title' : 'Description'}</p>
           <div className="format-group">
             <label>Color:</label>
-            <input type="color" value={textColor} onChange={(e) => setTextColor(e.target.value)} />
+            <input type="color" value={currentStyle.color} onChange={(e) => setCurrentStyle({...currentStyle, color: e.target.value})} />
           </div>
-          
           <div className="format-group">
             <label>Size:</label>
-            <input type="number" value={fontSize} onChange={(e) => setFontSize(e.target.value)} min="12" max="32" />
+            <input type="number" value={currentStyle.fontSize} onChange={(e) => setCurrentStyle({...currentStyle, fontSize: e.target.value})} min="12" max="32" />
           </div>
-
           <div className="format-group">
             <label>Font:</label>
-            <select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} className="font-select">
+            <select value={currentStyle.fontFamily} onChange={(e) => setCurrentStyle({...currentStyle, fontFamily: e.target.value})} className="font-select">
               <option value="inherit">Default</option>
               <option value="Arial, sans-serif">Arial</option>
               <option value="'Courier New', monospace">Courier</option>
@@ -229,17 +223,20 @@ function Admin() {
               <option value="Verdana, sans-serif">Verdana</option>
             </select>
           </div>
-          
           <div className="format-buttons">
-            <button onClick={() => setIsBold(!isBold)} className={isBold ? 'active' : ''} style={{fontWeight: 'bold'}}>B</button>
-            <button onClick={() => setIsItalic(!isItalic)} className={isItalic ? 'active' : ''} style={{fontStyle: 'italic'}}>I</button>
-            <button onClick={() => setIsUnderline(!isUnderline)} className={isUnderline ? 'active' : ''} style={{textDecoration: 'underline'}}>U</button>
+            <button type="button" onClick={() => setCurrentStyle({...currentStyle, bold: !currentStyle.bold})} className={currentStyle.bold ? 'active' : ''} style={{fontWeight: 'bold'}}>B</button>
+            <button type="button" onClick={() => setCurrentStyle({...currentStyle, italic: !currentStyle.italic})} className={currentStyle.italic ? 'active' : ''} style={{fontStyle: 'italic'}}>I</button>
+            <button type="button" onClick={() => setCurrentStyle({...currentStyle, underline: !currentStyle.underline})} className={currentStyle.underline ? 'active' : ''} style={{textDecoration: 'underline'}}>U</button>
           </div>
         </div>
         
-        <div className="preview" style={{color: textColor, fontWeight: isBold ? 'bold' : 'normal', textDecoration: isUnderline ? 'underline' : 'none', fontStyle: isItalic ? 'italic' : 'normal', fontSize: fontSize + 'px', fontFamily: fontFamily}}>
-          <strong>Title:</strong> {announcement || 'Your announcement here...'}<br/>
-          <strong>Description:</strong> {description || 'Your description here...'}
+        <div className="preview">
+          <div style={{color: titleStyle.color, fontWeight: titleStyle.bold ? 'bold' : 'normal', textDecoration: titleStyle.underline ? 'underline' : 'none', fontStyle: titleStyle.italic ? 'italic' : 'normal', fontSize: titleStyle.fontSize + 'px', fontFamily: titleStyle.fontFamily}}>
+            <strong>Title:</strong> {announcement || 'Your announcement here...'}
+          </div>
+          <div style={{color: descStyle.color, fontWeight: descStyle.bold ? 'bold' : 'normal', textDecoration: descStyle.underline ? 'underline' : 'none', fontStyle: descStyle.italic ? 'italic' : 'normal', fontSize: descStyle.fontSize + 'px', fontFamily: descStyle.fontFamily, marginTop: '10px'}}>
+            <strong>Description:</strong> {description || 'Your description here...'}
+          </div>
         </div>
         
         <button onClick={handlePostAnnouncement}>Post Announcement</button>

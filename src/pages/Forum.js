@@ -80,12 +80,12 @@ function Forum() {
           posts.map(post => (
             <div key={post.id} className="post-card" onClick={() => setSelectedPost(selectedPost === post.id ? null : post.id)}>
               <div className="post-header">
-                <h3 style={post.style || {}}>{post.title}</h3>
+                <h3 style={post.titleStyle || post.style || {}}>{post.title}</h3>
                 {post.pinned && <span className="pin-badge">📌</span>}
                 {post.isAnnouncement && <span className="announcement-badge">📢</span>}
               </div>
               <span className="author">By {post.author} • {post.date}</span>
-              {post.description && <p className="post-description" style={post.style || {}}>{post.description}</p>}
+              {post.description && <p className="post-description" style={post.descStyle || post.style || {}}>{post.description}</p>}
               {post.imageUrl && <img src={post.imageUrl} alt="Post" className="post-image" />}
               
               {selectedPost === post.id && (

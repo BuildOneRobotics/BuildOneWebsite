@@ -95,6 +95,35 @@
   margin-bottom: 20px;
 }
 
+.edit-mode-selector {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.edit-mode-selector button {
+  flex: 1;
+  padding: 12px;
+  background: rgba(30, 30, 30, 0.6);
+  border: 2px solid #bb86fc;
+  color: #ffffff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-mode-selector button.active {
+  background: linear-gradient(135deg, #bb86fc 0%, #7c4dff 100%);
+  box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
+}
+
+.format-hint {
+  color: #bb86fc;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
 .announcement-section input[type="text"],
 .announcement-section textarea {
   margin-bottom: 15px;
