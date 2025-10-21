@@ -54,9 +54,9 @@ function Admin() {
     });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const result = validateAdmin(username, pin);
+    const result = await validateAdmin(username, pin);
     if (result.valid) {
       setIsLoggedIn(true);
       setCurrentUser(result.username);

@@ -23,10 +23,15 @@ Posts are saved to localStorage (device-only). Once you add API credentials abov
 
 ## Security Notes
 
-### Admin Credentials
-- Passwords are hashed in `src/utils/auth.js`
-- Not stored in plain text
-- For production, use a backend authentication service
+### Admin Credentials (Vercel Setup Required)
+1. Go to your Vercel project dashboard
+2. Navigate to Settings → Environment Variables
+3. Add these variables:
+   - `BEN_PASSWORD` = `24122012`
+   - `ETHAN_PASSWORD` = `1012`
+4. Redeploy the site
+
+Passwords are now stored securely in Vercel environment variables, NOT in the code!
 
 ### Comment Auto-Deletion
 - Comments older than 3 months are automatically deleted
