@@ -15,6 +15,7 @@ const c = [
 export const validateAdmin = (u, p) => {
   const uh = h(u);
   const ph = h(p);
+  console.log('Username hash:', uh, 'Password hash:', ph);
   const match = c.find(([a, b]) => a === uh && b === ph);
   return match ? { valid: true, role: match[2], username: u } : { valid: false };
 };
