@@ -81,9 +81,9 @@ function Forum() {
             <div key={post.id} className="post-card" onClick={() => setSelectedPost(selectedPost === post.id ? null : post.id)}>
               <div className="post-header">
                 {post.isHTML ? (
-                  <h3 dangerouslySetInnerHTML={{__html: post.title}} />
+                  <h2 dangerouslySetInnerHTML={{__html: post.title}} />
                 ) : (
-                  <h3 style={post.titleStyle || post.style || {}}>{post.title}</h3>
+                  <h2 style={post.titleStyle || post.style || {}}>{post.title}</h2>
                 )}
                 {post.pinned && <span className="pin-badge">📌</span>}
                 {post.isAnnouncement && <span className="announcement-badge">📢</span>}
@@ -100,7 +100,7 @@ function Forum() {
               
               {selectedPost === post.id && (
                 <div className="comments-section">
-                  <h4>Comments</h4>
+                  <h3>Comments</h3>
                   {post.comments && post.comments.map((c, i) => (
                     <div key={i} className="comment">
                       <strong>{c.author}</strong>: {c.text}

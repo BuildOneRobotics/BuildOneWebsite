@@ -12,11 +12,11 @@ function Home() {
       
       <div className="features">
         <div className="card">
-          <h3>🤖 Advanced Robotics</h3>
+          <h2>🤖 Advanced Robotics</h2>
           <p>State-of-the-art robotic systems designed for precision and efficiency</p>
         </div>
         <div className="card">
-          <h3>⚡ Automation</h3>
+          <h2>⚡ Automation</h2>
           <p>Streamline your operations with intelligent automation solutions</p>
         </div>
       </div>

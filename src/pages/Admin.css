@@ -74,9 +74,11 @@
   gap: 8px;
 }
 
-.admin-header h2 {
+.welcome-text {
   margin: 0;
   color: #bb86fc;
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
 .role-badge {
@@ -381,9 +383,11 @@
   margin-bottom: 10px;
 }
 
-.mod-post-header h3 {
+.mod-post-title {
   margin: 0;
   color: #e0e0e0;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .pinned-badge, .announcement-badge {
@@ -419,9 +423,10 @@
   border-top: 1px solid #444;
 }
 
-.mod-comments h4 {
+.comments-header {
   color: #bb86fc;
   font-size: 0.95rem;
+  font-weight: 600;
   margin-bottom: 10px;
 }
 

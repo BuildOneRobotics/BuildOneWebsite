@@ -64,11 +64,12 @@
   background: rgba(187, 134, 252, 0.1);
 }
 
-.card h3 {
+.card h2 {
   transition: all 0.3s ease;
+  font-size: 1.5rem;
 }
 
-.card:hover h3 {
+.card:hover h2 {
   transform: scale(1.1);
   color: #bb86fc;
 }

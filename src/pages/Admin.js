@@ -167,7 +167,7 @@ function Admin() {
       
       <div className="admin-header">
         <div>
-          <h2>Welcome, {currentUser}</h2>
+          <p className="welcome-text">Welcome, {currentUser}</p>
           <span className="role-badge">{userRole === 'super' ? '👑 Super Admin' : '🛡️ Moderator'}</span>
         </div>
         <button onClick={handleLogout} className="logout-btn">Logout</button>
@@ -229,7 +229,7 @@ function Admin() {
           </div>
           {showAnalytics && (
             <div className="analytics-panel">
-              <h3>Forum Analytics</h3>
+              <h2>Forum Analytics</h2>
               <div className="stats-grid">
                 <div className="stat-card">
                   <span className="stat-number">{posts.length}</span>
@@ -263,14 +263,14 @@ function Admin() {
           posts.map(post => (
             <div key={post.id} className="mod-post">
               <div className="mod-post-header">
-                <h3>{post.title}</h3>
+                <p className="mod-post-title">{post.title}</p>
                 {post.pinned && <span className="pinned-badge">📌 Pinned</span>}
                 {post.isAnnouncement && <span className="announcement-badge">📢 Announcement</span>}
               </div>
               <p className="mod-author">By {post.author} • {post.date}</p>
               {post.comments && post.comments.length > 0 && (
                 <div className="mod-comments">
-                  <h4>Comments ({post.comments.length})</h4>
+                  <p className="comments-header">Comments ({post.comments.length})</p>
                   {post.comments.map((c, i) => (
                     <div key={i} className="mod-comment">
                       <strong>{c.author}</strong>: {c.text}
