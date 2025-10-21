@@ -8,8 +8,8 @@ const h = (s) => {
 };
 
 const c = [
-  [h('bensteels'), h('2412')],
-  [h('ethanpatmore'), h('1012')]
+  [-1006319273, -1397292976],
+  [-1545738973, -1397293008]
 ];
 
 export const validateAdmin = (u, p) => {
