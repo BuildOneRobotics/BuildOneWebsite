@@ -85,7 +85,7 @@ function Forum() {
                 {post.isAnnouncement && <span className="announcement-badge">📢</span>}
               </div>
               <span className="author">By {post.author} • {post.date}</span>
-              {post.description && <p className="post-description">{post.description}</p>}
+              {post.description && <p className="post-description" style={post.style || {}}>{post.description}</p>}
               {post.imageUrl && <img src={post.imageUrl} alt="Post" className="post-image" />}
               
               {selectedPost === post.id && (

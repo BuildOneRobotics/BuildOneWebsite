@@ -141,6 +141,24 @@
   margin: 0 !important;
 }
 
+.font-select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 2px solid #bb86fc;
+  background: rgba(30, 30, 30, 0.8);
+  color: #ffffff;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin: 0 !important;
+  transition: all 0.3s ease;
+}
+
+.font-select:focus {
+  outline: none;
+  border-color: #7c4dff;
+  box-shadow: 0 0 15px rgba(187, 134, 252, 0.3);
+}
+
 .format-buttons {
   display: flex;
   gap: 10px;
@@ -165,7 +183,14 @@
   border-radius: 15px;
   border: 2px solid #444;
   margin-bottom: 20px;
-  min-height: 50px;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+.preview strong {
+  color: #bb86fc;
+  display: inline-block;
+  margin-right: 8px;
 }
 
 .moderation-section {

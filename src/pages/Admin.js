@@ -28,6 +28,7 @@ function Admin() {
   const [isUnderline, setIsUnderline] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [fontSize, setFontSize] = useState('16');
+  const [fontFamily, setFontFamily] = useState('inherit');
 
   useEffect(() => {
     loadPosts().then(data => {
@@ -85,7 +86,8 @@ function Admin() {
         fontWeight: isBold ? 'bold' : 'normal',
         textDecoration: isUnderline ? 'underline' : 'none',
         fontStyle: isItalic ? 'italic' : 'normal',
-        fontSize: fontSize + 'px'
+        fontSize: fontSize + 'px',
+        fontFamily: fontFamily
       }
     };
     const updatedPosts = [newPost, ...posts];
@@ -99,6 +101,7 @@ function Admin() {
     setIsUnderline(false);
     setIsItalic(false);
     setFontSize('16');
+    setFontFamily('inherit');
   };
 
   const handlePin = (id) => {
@@ -213,6 +216,19 @@ function Admin() {
             <label>Size:</label>
             <input type="number" value={fontSize} onChange={(e) => setFontSize(e.target.value)} min="12" max="32" />
           </div>
+
+          <div className="format-group">
+            <label>Font:</label>
+            <select value={fontFamily} onChange={(e) => setFontFamily(e.target.value)} className="font-select">
+              <option value="inherit">Default</option>
+              <option value="Arial, sans-serif">Arial</option>
+              <option value="'Courier New', monospace">Courier</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Comic Sans MS', cursive">Comic Sans</option>
+              <option value="'Times New Roman', serif">Times New Roman</option>
+              <option value="Verdana, sans-serif">Verdana</option>
+            </select>
+          </div>
           
           <div className="format-buttons">
             <button onClick={() => setIsBold(!isBold)} className={isBold ? 'active' : ''} style={{fontWeight: 'bold'}}>B</button>
@@ -221,8 +237,9 @@ function Admin() {
           </div>
         </div>
         
-        <div className="preview" style={{color: textColor, fontWeight: isBold ? 'bold' : 'normal', textDecoration: isUnderline ? 'underline' : 'none', fontStyle: isItalic ? 'italic' : 'normal', fontSize: fontSize + 'px'}}>
-          Preview: {announcement || 'Your announcement here...'}
+        <div className="preview" style={{color: textColor, fontWeight: isBold ? 'bold' : 'normal', textDecoration: isUnderline ? 'underline' : 'none', fontStyle: isItalic ? 'italic' : 'normal', fontSize: fontSize + 'px', fontFamily: fontFamily}}>
+          <strong>Title:</strong> {announcement || 'Your announcement here...'}<br/>
+          <strong>Description:</strong> {description || 'Your description here...'}
         </div>
         
         <button onClick={handlePostAnnouncement}>Post Announcement</button>
