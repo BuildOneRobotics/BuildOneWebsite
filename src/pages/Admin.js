@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
 import { savePosts, loadPosts } from '../utils/storage';
-import { validateAdmin } from '../utils/auth';
+import { validateAdmin, isSuperAdmin } from '../utils/auth';
 
 const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate'];
 const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
@@ -9,6 +9,8 @@ const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
 function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
+  const [currentUser, setCurrentUser] = useState('');
+  const [userRole, setUserRole] = useState('');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
   const [announcement, setAnnouncement] = useState('');
@@ -49,10 +51,13 @@ function Admin() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (validateAdmin(username, pin)) {
+    const result = validateAdmin(username, pin);
+    if (result.valid) {
       setIsLoggedIn(true);
+      setCurrentUser(result.username);
+      setUserRole(result.role);
       setError('');
-      localStorage.setItem('adminUser', username);
+      localStorage.setItem('adminUser', result.username);
     } else {
       setError('Invalid username or pin');
     }
@@ -149,11 +154,14 @@ function Admin() {
       <h1>Admin Control Panel</h1>
       
       <div className="admin-header">
-        <h2>Welcome, {username}</h2>
+        <div>
+          <h2>Welcome, {currentUser}</h2>
+          <span className="role-badge">{userRole === 'super' ? '👑 Super Admin' : '🛡️ Moderator'}</span>
+        </div>
         <button onClick={handleLogout} className="logout-btn">Logout</button>
       </div>
 
-      <div className="announcement-section">
+      {userRole === 'super' && <div className="announcement-section">
         <h2>Post Announcement</h2>
         <input
           type="text"
@@ -197,12 +205,22 @@ function Admin() {
         </div>
         
         <button onClick={handlePostAnnouncement}>Post Announcement</button>
-      </div>
+      </div>}
+
+      {userRole === 'super' && (
+        <div className="super-admin-section">
+          <h2>Super Admin Controls</h2>
+          <div className="super-controls">
+            <button onClick={() => alert('Export feature coming soon!')}>📥 Export All Data</button>
+            <button onClick={() => alert('Analytics coming soon!')}>📊 View Analytics</button>
+            <button onClick={handleClearAll} className="danger-btn">🗑️ Clear All Posts</button>
+          </div>
+        </div>
+      )}
 
       <div className="moderation-section">
         <div className="mod-header">
           <h2>Moderate Forum Posts</h2>
-          {posts.length > 0 && <button onClick={handleClearAll} className="clear-all-btn">Clear All Posts</button>}
         </div>
         {posts.length === 0 ? (
           <p className="no-posts">No posts to moderate</p>
@@ -227,7 +245,7 @@ function Admin() {
                 </div>
               )}
               <div className="mod-actions">
-                <button onClick={() => handlePin(post.id)}>{post.pinned ? 'Unpin' : 'Pin'}</button>
+                {userRole === 'super' && <button onClick={() => handlePin(post.id)}>{post.pinned ? 'Unpin' : 'Pin'}</button>}
                 <button onClick={() => handleDelete(post.id)} className="delete-btn">Delete Post</button>
               </div>
             </div>

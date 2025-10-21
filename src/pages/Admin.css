@@ -68,9 +68,21 @@
   border: 2px solid #bb86fc;
 }
 
+.admin-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .admin-header h2 {
   margin: 0;
   color: #bb86fc;
+}
+
+.role-badge {
+  font-size: 0.9rem;
+  color: #ffd700;
+  font-weight: 600;
 }
 
 .logout-btn {
@@ -173,10 +185,34 @@
   margin: 0;
 }
 
-.clear-all-btn {
+.super-admin-section {
+  max-width: 800px;
+  margin: 0 auto 50px;
+  padding: 30px;
+  background: rgba(50, 30, 80, 0.4);
+  border-radius: 24px;
+  border: 2px solid #ffd700;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+}
+
+.super-admin-section h2 {
+  color: #ffd700;
+  margin-bottom: 20px;
+}
+
+.super-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.super-controls button {
+  padding: 12px 20px;
+  font-size: 0.95rem;
+}
+
+.danger-btn {
   background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
-  padding: 10px 20px !important;
-  font-size: 0.9rem !important;
 }
 
 .no-posts {
