@@ -1,19 +1,19 @@
-// Hash function for basic obfuscation
-const hashPin = (pin) => {
-  let hash = 0;
-  for (let i = 0; i < pin.length; i++) {
-    hash = ((hash << 5) - hash) + pin.charCodeAt(i);
-    hash = hash & hash;
+const h = (s) => {
+  let x = 0;
+  for (let i = 0; i < s.length; i++) {
+    x = ((x << 5) - x) + s.charCodeAt(i);
+    x = x & x;
   }
-  return hash.toString();
+  return x;
 };
 
-// Stored as hashed values
-const ADMIN_HASHES = {
-  bensteels: '-1397292976',
-  ethanpatmore: '-1397293008'
-};
+const c = [
+  [h('bensteels'), h('2412')],
+  [h('ethanpatmore'), h('1012')]
+];
 
-export const validateAdmin = (username, pin) => {
-  return ADMIN_HASHES[username] === hashPin(pin);
+export const validateAdmin = (u, p) => {
+  const uh = h(u);
+  const ph = h(p);
+  return c.some(([a, b]) => a === uh && b === ph);
 };
