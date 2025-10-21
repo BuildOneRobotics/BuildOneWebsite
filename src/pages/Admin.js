@@ -13,6 +13,11 @@ function Admin() {
   const [userRole, setUserRole] = useState('');
   const [pin, setPin] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    setUsername('');
+    setPin('');
+  }, []);
   const [announcement, setAnnouncement] = useState('');
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -138,9 +143,9 @@ function Admin() {
       <div className="admin">
         <div className="login-container">
           <h1>Admin Login</h1>
-          <form onSubmit={handleLogin}>
-            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <input type="password" placeholder="PIN" value={pin} onChange={(e) => setPin(e.target.value)} />
+          <form onSubmit={handleLogin} autoComplete="off">
+            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="off" />
+            <input type="password" placeholder="PIN" value={pin} onChange={(e) => setPin(e.target.value)} autoComplete="new-password" />
             {error && <p className="error">{error}</p>}
             <button type="submit">Login</button>
           </form>
