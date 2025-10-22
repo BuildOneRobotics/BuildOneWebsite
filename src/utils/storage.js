@@ -1,5 +1,5 @@
-const API_URL = 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
-const API_KEY = '$2a$10$YOUR_API_KEY';
+const API_URL = process.env.REACT_APP_JSONBIN_URL || 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
+const API_KEY = process.env.REACT_APP_JSONBIN_KEY || '$2a$10$YOUR_API_KEY';
 
 export const savePosts = async (posts) => {
   localStorage.setItem('forumPosts', JSON.stringify(posts));
