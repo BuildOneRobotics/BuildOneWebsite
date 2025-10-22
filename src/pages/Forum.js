@@ -13,6 +13,22 @@ function Forum() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const migrateOldPosts = async () => {
+      const oldPosts = localStorage.getItem('forumPosts');
+      if (oldPosts) {
+        const posts = JSON.parse(oldPosts);
+        if (posts.length > 0) {
+          await fetch('https://buildonerobotics.vercel.app/api/migrate-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ posts })
+          });
+        }
+      }
+    };
+
+    migrateOldPosts();
+
     fetch('https://buildonerobotics.vercel.app/api/posts')
       .then(res => res.json())
       .then(data => {
