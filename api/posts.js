@@ -1,11 +1,10 @@
-const ALLOWED_ORIGIN = 'https://admin-dashboard-phi-green-90.vercel.app';
+import { loadFromGist } from './gist-storage';
 
-const API_URL = process.env.JSONBIN_URL || 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
-const API_KEY = process.env.JSONBIN_KEY || '$2a$10$YOUR_API_KEY';
+const ALLOWED_ORIGIN = 'https://admin-dashboard-phi-green-90.vercel.app';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -14,40 +13,11 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const response = await fetch(API_URL, {
-        headers: { 'X-Master-Key': API_KEY }
-      });
-      const data = await response.json();
-      const posts = data.record?.posts || [];
+      const data = await loadFromGist();
+      const posts = data.posts || [];
       return res.status(200).json(posts);
     } catch (error) {
       return res.status(500).json({ error: 'Failed to load posts' });
-    }
-  }
-
-  if (req.method === 'DELETE') {
-    const { id } = req.query;
-    try {
-      const getResponse = await fetch(API_URL, {
-        headers: { 'X-Master-Key': API_KEY }
-      });
-      const data = await getResponse.json();
-      const posts = data.record?.posts || [];
-      
-      const filteredPosts = posts.filter(p => p.id != id);
-      
-      await fetch(API_URL, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': API_KEY
-        },
-        body: JSON.stringify({ posts: filteredPosts })
-      });
-      
-      return res.status(200).json({ success: true });
-    } catch (error) {
-      return res.status(500).json({ error: 'Failed to delete post' });
     }
   }
 

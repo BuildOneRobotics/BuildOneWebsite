@@ -1,7 +1,6 @@
-const ALLOWED_ORIGIN = 'https://admin-dashboard-phi-green-90.vercel.app';
+import { loadFromGist, saveToGist } from './gist-storage';
 
-const API_URL = process.env.JSONBIN_URL || 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
-const API_KEY = process.env.JSONBIN_KEY || '$2a$10$YOUR_API_KEY';
+const ALLOWED_ORIGIN = 'https://admin-dashboard-phi-green-90.vercel.app';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
@@ -20,17 +19,14 @@ export default async function handler(req, res) {
     }
 
     try {
-      const getResponse = await fetch(API_URL, {
-        headers: { 'X-Master-Key': API_KEY }
-      });
-      const data = await getResponse.json();
-      const posts = data.record?.posts || [];
+      const data = await loadFromGist();
+      const posts = data.posts || [];
 
       const newPost = {
         id: Date.now(),
         title,
         description: content,
-        author,
+        author: author || 'Admin',
         date: new Date().toLocaleDateString(),
         pinned: true,
         isAnnouncement: true,
@@ -38,19 +34,11 @@ export default async function handler(req, res) {
       };
 
       posts.unshift(newPost);
-
-      await fetch(API_URL, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': API_KEY
-        },
-        body: JSON.stringify({ posts })
-      });
+      await saveToGist({ posts });
 
       return res.status(201).json({ success: true, post: newPost });
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to create announcement' });
+      return res.status(500).json({ error: 'Failed to create announcement', details: error.message });
     }
   }
 

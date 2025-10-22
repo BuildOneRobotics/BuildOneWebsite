@@ -1,7 +1,6 @@
-const ALLOWED_ORIGIN = 'https://admin-dashboard-phi-green-90.vercel.app';
+import { loadFromGist } from './gist-storage';
 
-const API_URL = process.env.JSONBIN_URL || 'https://api.jsonbin.io/v3/b/YOUR_BIN_ID';
-const API_KEY = process.env.JSONBIN_KEY || '$2a$10$YOUR_API_KEY';
+const ALLOWED_ORIGIN = 'https://admin-dashboard-phi-green-90.vercel.app';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', ALLOWED_ORIGIN);
@@ -14,11 +13,8 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const response = await fetch(API_URL, {
-        headers: { 'X-Master-Key': API_KEY }
-      });
-      const data = await response.json();
-      const posts = data.record?.posts || [];
+      const data = await loadFromGist();
+      const posts = data.posts || [];
       
       const announcements = posts.filter(p => p.isAnnouncement).length;
       const regularPosts = posts.filter(p => !p.isAnnouncement).length;

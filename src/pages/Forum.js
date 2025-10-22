@@ -13,10 +13,18 @@ function Forum() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    loadPosts().then(data => {
-      const cleaned = cleanOldComments(data);
-      setPosts(cleaned.sort((a, b) => b.pinned - a.pinned));
-    });
+    fetch('https://buildonerobotics.vercel.app/api/posts')
+      .then(res => res.json())
+      .then(data => {
+        const cleaned = cleanOldComments(data);
+        setPosts(cleaned.sort((a, b) => b.pinned - a.pinned));
+      })
+      .catch(() => {
+        loadPosts().then(data => {
+          const cleaned = cleanOldComments(data);
+          setPosts(cleaned.sort((a, b) => b.pinned - a.pinned));
+        });
+      });
   }, []);
 
   const cleanOldComments = (posts) => {
