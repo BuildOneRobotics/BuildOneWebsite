@@ -1,9 +1,9 @@
 .footer {
-  background: rgba(30, 30, 30, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 30px;
+  background: var(--bg-secondary);
+  padding: 24px;
   text-align: center;
-  border-top: 2px solid #bb86fc;
+  border-top: 1px solid var(--border-color);
   margin-top: auto;
-  color: #b0b0b0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
 }
