@@ -224,3 +224,18 @@
 [data-theme="dark"] .cancel-btn:hover {
   background: #4b5563;
 }
+
+.admin-notice {
+  margin-top: 32px;
+  padding: 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  text-align: center;
+}
+
+.admin-notice p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}

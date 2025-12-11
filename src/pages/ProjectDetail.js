@@ -6,10 +6,30 @@ function ProjectDetail() {
   const { projectId } = useParams();
   const [isAdmin, setIsAdmin] = useState(false);
   
-  // Check admin status
+  // Check admin status - verify with server
   useEffect(() => {
-    const adminUser = localStorage.getItem('adminUser');
-    setIsAdmin(!!adminUser);
+    const checkAdminStatus = async () => {
+      const adminUser = localStorage.getItem('adminUser');
+      if (!adminUser) {
+        setIsAdmin(false);
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ verify: true, username: adminUser })
+        });
+        const data = await response.json();
+        setIsAdmin(data.valid || false);
+      } catch {
+        setIsAdmin(false);
+        localStorage.removeItem('adminUser');
+      }
+    };
+    
+    checkAdminStatus();
   }, []);
   
   // Editable content state
@@ -89,7 +109,7 @@ function ProjectDetail() {
           <div className="project-actions">
             {!isEditing ? (
               <button onClick={() => setIsEditing(true)} className="edit-btn">
-                Edit Content
+                🔒 Admin: Edit Content
               </button>
             ) : (
               <div className="edit-actions">
@@ -150,6 +170,12 @@ function ProjectDetail() {
                 <p key={index}>{paragraph}</p>
               ))}
             </div>
+            
+            {!isAdmin && (
+              <div className="admin-notice">
+                <p>📝 Content managed by administrators</p>
+              </div>
+            )}
           </div>
         )}
       </article>
