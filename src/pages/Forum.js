@@ -11,6 +11,9 @@ function Forum() {
   const [comment, setComment] = useState('');
   const [guestName, setGuestName] = useState('');
   const [error, setError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
+  const [filterType, setFilterType] = useState('all');
 
   useEffect(() => {
     const migrateOldPosts = async () => {
@@ -93,15 +96,91 @@ function Forum() {
     setError('');
   };
 
+  const filteredAndSortedPosts = posts
+    .filter(post => {
+      const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (post.description && post.description.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesFilter = filterType === 'all' || 
+                           (filterType === 'announcements' && post.isAnnouncement) ||
+                           (filterType === 'discussions' && !post.isAnnouncement);
+      return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => {
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      
+      switch (sortBy) {
+        case 'oldest':
+          return new Date(a.date) - new Date(b.date);
+        case 'mostComments':
+          return (b.comments?.length || 0) - (a.comments?.length || 0);
+        default: // newest
+          return new Date(b.date) - new Date(a.date);
+      }
+    });
+
   return (
     <div className="forum">
-      <h1>Community Forum</h1>
+      <div className="forum-header">
+        <h1>Community Forum</h1>
+        <p>Join the conversation and connect with our community</p>
+      </div>
+      
+      <div className="forum-controls">
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search posts..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+        </div>
+        
+        <div className="forum-filters">
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="sort-select">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="mostComments">Most Comments</option>
+          </select>
+          
+          <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="filter-select">
+            <option value="all">All Posts</option>
+            <option value="announcements">Announcements</option>
+            <option value="discussions">Discussions</option>
+          </select>
+        </div>
+      </div>
+      
+      <div className="forum-stats">
+        <div className="stat">
+          <span className="stat-number">{posts.length}</span>
+          <span className="stat-label">Total Posts</span>
+        </div>
+        <div className="stat">
+          <span className="stat-number">{posts.filter(p => p.isAnnouncement).length}</span>
+          <span className="stat-label">Announcements</span>
+        </div>
+        <div className="stat">
+          <span className="stat-number">{posts.reduce((acc, p) => acc + (p.comments?.length || 0), 0)}</span>
+          <span className="stat-label">Comments</span>
+        </div>
+      </div>
       
       <div className="forum-posts">
-        {posts.length === 0 ? (
-          <p className="no-posts">No posts yet. Check back soon!</p>
+        {filteredAndSortedPosts.length === 0 ? (
+          <div className="no-posts">
+            {searchTerm || filterType !== 'all' ? (
+              <div>
+                <p>No posts match your search criteria.</p>
+                <button onClick={() => { setSearchTerm(''); setFilterType('all'); }}>Clear Filters</button>
+              </div>
+            ) : (
+              <p>No posts yet. Check back soon!</p>
+            )}
+          </div>
         ) : (
-          posts.map(post => (
+          filteredAndSortedPosts.map(post => (
             <div key={post.id} className="post-card" onClick={() => setSelectedPost(selectedPost === post.id ? null : post.id)}>
               <div className="post-header">
                 <h2 style={post.titleStyle || post.style || {}}>{post.title}</h2>

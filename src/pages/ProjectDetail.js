@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import './ProjectDetail.css';
 
 function ProjectDetail() {
   const { projectId } = useParams();
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  // Check admin status
+  useEffect(() => {
+    const adminUser = localStorage.getItem('adminUser');
+    setIsAdmin(!!adminUser);
+  }, []);
   
   // Editable content state
   const [content, setContent] = useState({
@@ -49,7 +56,7 @@ function ProjectDetail() {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Load saved content
     const saved = localStorage.getItem('project-content');
     if (saved) {
@@ -78,18 +85,20 @@ function ProjectDetail() {
     <div className="project-detail">
       <div className="project-header">
         <Link to="/projects" className="back-link">← Back to Projects</Link>
-        <div className="project-actions">
-          {!isEditing ? (
-            <button onClick={() => setIsEditing(true)} className="edit-btn">
-              Edit Content
-            </button>
-          ) : (
-            <div className="edit-actions">
-              <button onClick={handleSave} className="save-btn">Save</button>
-              <button onClick={() => setIsEditing(false)} className="cancel-btn">Cancel</button>
-            </div>
-          )}
-        </div>
+        {isAdmin && (
+          <div className="project-actions">
+            {!isEditing ? (
+              <button onClick={() => setIsEditing(true)} className="edit-btn">
+                Edit Content
+              </button>
+            ) : (
+              <div className="edit-actions">
+                <button onClick={handleSave} className="save-btn">Save</button>
+                <button onClick={() => setIsEditing(false)} className="cancel-btn">Cancel</button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       <article className="project-article">

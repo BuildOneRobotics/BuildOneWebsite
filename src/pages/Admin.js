@@ -3,6 +3,155 @@ import './Admin.css';
 import { savePosts, loadPosts } from '../utils/storage';
 import { validateAdmin, isSuperAdmin } from '../utils/auth';
 
+// Project Manager Component
+function ProjectManager() {
+  const [projects, setProjects] = useState({
+    'rusty-lighthouse': {
+      title: 'The Rusty LightHouse',
+      description: 'A modern lighthouse management system built with Rust',
+      status: 'Active'
+    },
+    'rusty-developer-studio': {
+      title: 'Rusty-Developer-Studio', 
+      description: 'Comprehensive development environment for Rust projects',
+      status: 'In Development'
+    }
+  });
+  
+  const [editingProject, setEditingProject] = useState(null);
+  const [newProject, setNewProject] = useState({ id: '', title: '', description: '', status: 'Active' });
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('projects-config');
+    if (saved) {
+      setProjects(JSON.parse(saved));
+    }
+  }, []);
+
+  const saveProjects = (updatedProjects) => {
+    setProjects(updatedProjects);
+    localStorage.setItem('projects-config', JSON.stringify(updatedProjects));
+  };
+
+  const handleUpdateProject = (id, field, value) => {
+    const updated = {
+      ...projects,
+      [id]: { ...projects[id], [field]: value }
+    };
+    saveProjects(updated);
+  };
+
+  const handleAddProject = () => {
+    if (!newProject.id || !newProject.title) return;
+    const updated = {
+      ...projects,
+      [newProject.id]: {
+        title: newProject.title,
+        description: newProject.description,
+        status: newProject.status
+      }
+    };
+    saveProjects(updated);
+    setNewProject({ id: '', title: '', description: '', status: 'Active' });
+    setShowAddForm(false);
+  };
+
+  const handleDeleteProject = (id) => {
+    if (!window.confirm('Delete this project?')) return;
+    const updated = { ...projects };
+    delete updated[id];
+    saveProjects(updated);
+  };
+
+  return (
+    <div className="project-manager">
+      <div className="projects-list">
+        {Object.entries(projects).map(([id, project]) => (
+          <div key={id} className="project-item">
+            {editingProject === id ? (
+              <div className="edit-project">
+                <input
+                  value={project.title}
+                  onChange={(e) => handleUpdateProject(id, 'title', e.target.value)}
+                  placeholder="Project title"
+                />
+                <textarea
+                  value={project.description}
+                  onChange={(e) => handleUpdateProject(id, 'description', e.target.value)}
+                  placeholder="Project description"
+                  rows={3}
+                />
+                <select
+                  value={project.status}
+                  onChange={(e) => handleUpdateProject(id, 'status', e.target.value)}
+                >
+                  <option value="Active">Active</option>
+                  <option value="In Development">In Development</option>
+                  <option value="Completed">Completed</option>
+                  <option value="On Hold">On Hold</option>
+                </select>
+                <div className="edit-actions">
+                  <button onClick={() => setEditingProject(null)}>Done</button>
+                </div>
+              </div>
+            ) : (
+              <div className="project-display">
+                <h4>{project.title}</h4>
+                <p>{project.description}</p>
+                <span className="status">{project.status}</span>
+                <div className="project-actions">
+                  <button onClick={() => setEditingProject(id)}>Edit</button>
+                  <button onClick={() => handleDeleteProject(id)} className="delete-btn">Delete</button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      
+      {showAddForm ? (
+        <div className="add-project-form">
+          <h4>Add New Project</h4>
+          <input
+            placeholder="Project ID (e.g., my-new-project)"
+            value={newProject.id}
+            onChange={(e) => setNewProject({...newProject, id: e.target.value})}
+          />
+          <input
+            placeholder="Project Title"
+            value={newProject.title}
+            onChange={(e) => setNewProject({...newProject, title: e.target.value})}
+          />
+          <textarea
+            placeholder="Project Description"
+            value={newProject.description}
+            onChange={(e) => setNewProject({...newProject, description: e.target.value})}
+            rows={3}
+          />
+          <select
+            value={newProject.status}
+            onChange={(e) => setNewProject({...newProject, status: e.target.value})}
+          >
+            <option value="Active">Active</option>
+            <option value="In Development">In Development</option>
+            <option value="Completed">Completed</option>
+            <option value="On Hold">On Hold</option>
+          </select>
+          <div className="form-actions">
+            <button onClick={handleAddProject}>Add Project</button>
+            <button onClick={() => setShowAddForm(false)}>Cancel</button>
+          </div>
+        </div>
+      ) : (
+        <button onClick={() => setShowAddForm(true)} className="add-project-btn">
+          + Add New Project
+        </button>
+      )}
+    </div>
+  );
+}
+
 const SWEAR_WORDS = ['damn', 'hell', 'crap', 'stupid', 'idiot', 'dumb', 'suck', 'hate'];
 const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
 
@@ -188,6 +337,13 @@ function Admin() {
         </div>
         <button onClick={handleLogout} className="logout-btn">Logout</button>
       </div>
+
+      {userRole === 'super' && (
+        <div className="projects-management">
+          <h2>Manage Projects</h2>
+          <ProjectManager />
+        </div>
+      )}
 
       {userRole === 'super' && <div className="announcement-section">
         <h2>Post Announcement</h2>
